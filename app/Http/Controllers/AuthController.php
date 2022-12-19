@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\UserResource;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
@@ -50,9 +51,9 @@ class AuthController extends Controller
                 'password' => Hash::make($request->password)
             ]);
             $user->roles()->attach(3);
-            $user->roles;
+            
             return response()->json([
-                'user' => $user,
+                'user' => new UserResource($user),
                 'status' => true,
                 'message' => 'User Created Successfully',
                 'token' => $user->createToken("API TOKEN")->plainTextToken
@@ -90,9 +91,9 @@ class AuthController extends Controller
             }
 
             $user = User::where('email', $request->email)->first();
-            $user->roles;
+            
             return response()->json([
-                'user' => $user,
+                'user' => new UserResource($user),
                 'status' => true,
                 'message' => 'User Logged In Successfully',
                 'token' => $user->createToken("API TOKEN")->plainTextToken

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\CommentResource;
 use App\Models\Comment;
 use App\Models\Post;
 use Illuminate\Http\Request;
@@ -17,12 +18,8 @@ class CommentController extends Controller
     public function index(Request $request)
     {
         $post = Post::find($request->post_id);
-        $comments = $post->comments;
-        foreach ($comments as $comment) {
-            $comment->user;
-        }
         return [
-            "comments" => $comments,
+            "comments" => CommentResource::collection($post->comments),
             "count" => $post->comments()->count()
         ];
     }

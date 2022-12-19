@@ -7,6 +7,7 @@ use App\Http\Controllers\CommentController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\RoleController;
 use App\Http\Controllers\TagController;
 use Illuminate\Support\Facades\Hash;
 
@@ -52,5 +53,6 @@ Route::resources([
     '/comments' => CommentController::class,
     '/categories' => CategoryController::class,
     '/tags' => TagController::class,
-    '/notifications' => NotificationController::class
+    '/notifications' => NotificationController::class,
+    "/roles" => RoleController::class
 ]);

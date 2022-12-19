@@ -6,6 +6,7 @@ use App\Events\PostCreated;
 use App\Models\Post;
 use Illuminate\Http\Request;
 use App\Http\Requests\StorePostRequest;
+use App\Http\Resources\PostResource;
 use App\Jobs\ChangePostJob;
 use App\Jobs\PostCacheJob;
 use App\Mail\PostCreatedMail;
@@ -26,25 +27,16 @@ class PostController extends Controller
 
     public function index()
     {
-        $posts = Post::latest()->paginate(10);
-        foreach ($posts as $post) {
-            $post->category;
-        }
-        return $posts;
+        return PostResource::posts(Post::latest()->paginate(5));
     }
 
     public function show($id)
     {
-        $post = Post::find($id);
-        $post->category;
-        $post->tags;
-        $post->user;
-        return $post;
+        return PostResource::post(Post::find($id));
     }
 
     public function store(StorePostRequest $request)
     {
-        // $this->authorize('create');
         if ($request->hasFile('photo')) {
             $inner_photo = $request->file('photo')->store('post-photos');
             $public_photo = asset('storage/' . $inner_photo);
@@ -102,10 +94,7 @@ class PostController extends Controller
     public function latest($id)
     {
         $latest_posts = Post::latest()->get()->except($id)->take(5);
-        foreach ($latest_posts as $post) {
-            $post->category;
-        }
-        return $latest_posts;
+        return PostResource::posts($latest_posts);
     }
 }
 
