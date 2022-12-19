@@ -41,6 +41,11 @@ class PostPolicy
      */
     public function create(User $user)
     {
+        foreach ($user->roles as $role) {
+            if ($role->role_name === 'admin' || $role->role_name === 'blogger' || $role->role_name === 'editor') {
+                return true;
+            }
+        }
         return true;
     }
 
@@ -53,6 +58,11 @@ class PostPolicy
      */
     public function update(User $user, Post $post)
     {
+        foreach ($user->roles as $role) {
+            if ($role->role_name === 'admin') {
+                return true;
+            }
+        }
         return $user->id === $post->user_id;
     }
 
@@ -65,6 +75,11 @@ class PostPolicy
      */
     public function delete(User $user, Post $post)
     {
+        foreach ($user->roles as $role) {
+            if ($role->role_name === 'admin') {
+                return true;
+            }
+        }
         return $user->id === $post->user_id;
     }
 

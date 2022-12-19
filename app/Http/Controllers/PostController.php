@@ -44,6 +44,7 @@ class PostController extends Controller
 
     public function store(StorePostRequest $request)
     {
+        // $this->authorize('create');
         if ($request->hasFile('photo')) {
             $inner_photo = $request->file('photo')->store('post-photos');
             $public_photo = asset('storage/' . $inner_photo);
@@ -57,12 +58,7 @@ class PostController extends Controller
             'public_photo' => $public_photo ?? null,
             'inner_photo' => $inner_photo ?? null,
         ]);
-        $tags = $request->tags;
-        if ($tags) {
-            foreach (json_decode($tags) as $tag_id) {
-                $newPost->tags()->attach($tag_id);
-            }
-        }
+        $newPost->tags()->attach(json_decode($request->tags, true));
 
         PostCreated::dispatch($newPost);
 
@@ -70,14 +66,16 @@ class PostController extends Controller
         ChangePostJob::dispatch($newPost)->delay(10);
         Mail::to(auth()->user())->queue((new PostCreatedMail($newPost))->delay(10));
         Notification::send(auth()->user(), (new PostCreatedNotification($newPost))->delay(10));
-
+        
         return $newPost;
     }
 
     public function update(Request $request, $id)
     {
         $post = Post::find($id);
+
         $this->authorize('update', $post);
+        
         $upPost = $post->update([
             "title" => $request->title,
             "short_content" => $request->short_content,
@@ -90,12 +88,15 @@ class PostController extends Controller
     {
         $post = Post::find($id);
 
+        $this->authorize('delete', $post);
+
         if ($post->inner_photo) {
             Storage::delete($post->inner_photo);
         }
         $post->tags()->detach();
         $post->comments()->delete();
         $post->delete();
+        return $post;
     }
 
     public function latest($id)

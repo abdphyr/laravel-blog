@@ -17,7 +17,10 @@ class AuthController extends Controller
     }
     public function users()
     {
-        return User::all();
+        $users = User::join('role_user', 'role_user.user_id', '=', 'users.id')
+        ->get(['users.id']);
+        // $users->roles;
+        return $users;
     }
     public function register(Request $request)
     {
@@ -46,7 +49,8 @@ class AuthController extends Controller
                 'email' => $request->email,
                 'password' => Hash::make($request->password)
             ]);
-
+            $user->roles()->attach(3);
+            $user->roles;
             return response()->json([
                 'user' => $user,
                 'status' => true,
@@ -86,9 +90,9 @@ class AuthController extends Controller
             }
 
             $user = User::where('email', $request->email)->first();
-
+            $user->roles;
             return response()->json([
-                'user' => Auth::user(),
+                'user' => $user,
                 'status' => true,
                 'message' => 'User Logged In Successfully',
                 'token' => $user->createToken("API TOKEN")->plainTextToken
