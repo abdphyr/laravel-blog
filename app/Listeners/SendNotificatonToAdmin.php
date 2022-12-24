@@ -9,22 +9,11 @@ use Illuminate\Support\Facades\Log;
 
 class SendNotificatonToAdmin
 {
-    /**
-     * Create the event listener.
-     *
-     * @return void
-     */
     public function __construct()
     {
         //
     }
 
-    /**
-     * Handle the event.
-     *
-     * @param  \App\Events\PostCreated  $event
-     * @return void
-     */
     public function handle(PostCreated $event)
     {
         Log::alert('Hurmatli admin post yaratildi """' . $event->post->title . '"""');

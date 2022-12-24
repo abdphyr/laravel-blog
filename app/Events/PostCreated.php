@@ -17,21 +17,13 @@ class PostCreated
 
 
     public Post $post;
-    /**
-     * Create a new event instance.
-     *
-     * @return void
-     */
+   
     public function __construct(Post $post)
     {
         $this->post = $post;
     }
 
-    /**
-     * Get the channels the event should broadcast on.
-     *
-     * @return \Illuminate\Broadcasting\Channel|array
-     */
+     
     public function broadcastOn()
     {
         return new PrivateChannel('channel-name');

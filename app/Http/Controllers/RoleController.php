@@ -9,6 +9,10 @@ use Illuminate\Http\Request;
 class RoleController extends Controller
 {
     public function index() {
-        return RoleResource::collection(Role::all());
+        try {
+            return RoleResource::collection(Role::all());
+        } catch (\Throwable $th) {
+            return response()->json(['message' => $th->getMessage()]);
+        }
     }
 }

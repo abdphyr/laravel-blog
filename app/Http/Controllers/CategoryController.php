@@ -9,11 +9,10 @@ class CategoryController extends Controller
 {
     public function index()
     {
-        // $categories = Category::all();
-        // foreach ($categories as $category) {
-        //     $category['post_count'] = $category->posts()->count();
-        // }
-        // return $categories;
-        return CategoryResource::collection(Category::all());
+        try {
+            return CategoryResource::collection(Category::all());
+        } catch (\Throwable $th) {
+            return response()->json(['message' => $th->getMessage()]);
+        }
     }
 }

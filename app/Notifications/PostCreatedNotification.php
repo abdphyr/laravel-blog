@@ -13,33 +13,20 @@ class PostCreatedNotification extends Notification implements ShouldQueue
     use Queueable;
 
     public Post $post;
-    /**
-     * Create a new notification instance.
-     *
-     * @return void
-     */
+    
+    
     public function __construct(Post $post)
     {
         $this->post = $post;
     }
 
-    /**
-     * Get the notification's delivery channels.
-     *
-     * @param  mixed  $notifiable
-     * @return array
-     */
+    
     public function via($notifiable)
     {
         return ['database'];
     }
 
-    /**
-     * Get the mail representation of the notification.
-     *
-     * @param  mixed  $notifiable
-     * @return \Illuminate\Notifications\Messages\MailMessage
-     */
+    
     public function toMail($notifiable)
     {
         return (new MailMessage)
@@ -48,18 +35,13 @@ class PostCreatedNotification extends Notification implements ShouldQueue
                     ->line('Thank you for using our application!');
     }
 
-    /**
-     * Get the array representation of the notification.
-     *
-     * @param  mixed  $notifiable
-     * @return array
-     */
+    
     public function toArray($notifiable)
     {
         return [
             "id" => $this->post->id,
             "title" => $this->post->title,
-            "created_at" => $this->post->created_at,
+            "created_at" => date('Y-m-d:m', strtotime($this->post->created_at)),
         ];
     }
 }

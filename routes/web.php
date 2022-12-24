@@ -18,11 +18,3 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
-
-// Route::get('/api/posts/latest/{id}', [PostController::class, 'latest']);
-// Route::resources([
-//   '/api/posts' => PostController::class,
-//   '/api/comments' => CommentController::class,
-//   '/api/categories' => CategoryController::class,
-//   'api/tags' => TagController::class
-// ]);

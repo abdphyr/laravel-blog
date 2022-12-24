@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Http\Resources\NotificationResource;
 
 class NotificationController extends Controller
 {
@@ -11,32 +11,56 @@ class NotificationController extends Controller
         $this->middleware("auth:sanctum");
     }
 
+
     public function index()
     {
-        return [
-            "count" => auth()->user()->unreadNotifications()->count(),
-            "notifications" => auth()->user()->notifications
-        ];
+        try {
+            return [
+                "count" => auth()->user()->unreadNotifications()->count(),
+                "notifications" =>auth()->user()->notifications
+            ];  
+        } catch (\Throwable $th) {
+            return response()->json(['message' => $th->getMessage()]);
+        }
     }
+
 
     public function read($id)
     {
-        auth()->user()->notifications()->find($id)->markAsRead();
-        return $id;
+        try {
+            auth()->user()->notifications()->find($id)->markAsRead();
+            return $id;
+        } catch (\Throwable $th) {
+            return response()->json(['message' => $th->getMessage()]);
+        }
     }
 
     public function readAll()
     {
-        return auth()->user()->notifications->markAsRead();
+        try {
+            return auth()->user()->notifications->markAsRead();
+        } catch (\Throwable $th) {
+            return response()->json(['message' => $th->getMessage()]);
+        }
     }
+
 
     public function destroy($id)
     {
-        return auth()->user()->notifications()->find($id)->delete();
+        try {
+            return auth()->user()->notifications()->find($id)->delete();
+        } catch (\Throwable $th) {
+            return response()->json(['message' => $th->getMessage()]);
+        }
     }
+
 
     public function destroyAll()
     {
-        return auth()->user()->notifications()->delete();
+        try {
+            return auth()->user()->notifications()->delete();
+        } catch (\Throwable $th) {
+            return response()->json(['message' => $th->getMessage()]);
+        }
     }
 }
